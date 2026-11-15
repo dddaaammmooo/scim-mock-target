@@ -1,6 +1,9 @@
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 DATA_DIR=/data
+# Apply Debian security updates on top of the base image (fixes OS CVEs between base image releases).
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /srv
 
 COPY requirements.txt .
