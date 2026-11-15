@@ -1,0 +1,68 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Backend tests (100% coverage)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - run: pip install -r requirements-dev.txt
+      # pytest.ini: -m "not ui", --cov-branch, fail_under=100 (.coveragerc)
+      - run: python -m pytest --cov-report=xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: warn
+
+  ui:
+    name: UI tests (Playwright)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - run: pip install -r requirements-dev.txt
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest -m ui --no-cov -v
+
+  docker:
+    name: Docker build and health check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t scim-target:ci .
+      - name: Run container and check /api/health
+        run: |
+          docker run -d --name scim-target -p 8100:8100 -e SCIM_TOKEN=ci-token scim-target:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8100/api/health; then echo; break; fi
+            sleep 1
+          done
+          curl -fsS http://localhost:8100/api/health | grep '"ok"'
+          # one authenticated SCIM round trip against the real container
+          curl -fsS -X POST http://localhost:8100/t/ci/scim/v2/Users \
+            -H "Authorization: Bearer ci-token" -H "Content-Type: application/scim+json" \
+            -d '{"userName":"ci@example.com"}' | grep -q ci@example.com
+          curl -fsS http://localhost:8100/api/tenants/ci/summary | grep -q '"users":1'
+      - name: Container logs
+        if: failure()
+        run: docker logs scim-target

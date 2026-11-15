@@ -1,0 +1,17 @@
+name: mockscimtarget
+
+services:
+  scim-target:
+    build: .
+    container_name: mockscimtarget-scim-target
+    ports:
+      - "127.0.0.1:8100:8100"
+    environment:
+      SCIM_TOKEN: ${SCIM_TOKEN:-target-token}
+      DATA_DIR: /data
+    volumes:
+      - scim-data:/data
+    restart: unless-stopped
+
+volumes:
+  scim-data:
