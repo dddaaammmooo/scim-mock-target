@@ -669,7 +669,7 @@ def test_store_find_conflict(store):
     assert store.find_conflict("t", "User", "external_id", "Ex", None, False) == "1"
     assert store.find_conflict("t", "User", "external_id", "ex", None, False) is None  # case-sensitive
     assert store.find_conflict("other", "User", "user_name", "alice", None, True) is None  # other tenant
-    with pytest.raises(AssertionError):
+    with pytest.raises(KeyError):
         store.find_conflict("t", "User", "body; DROP TABLE resources", "x", None, True)
 
 

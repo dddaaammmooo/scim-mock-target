@@ -1,0 +1,15 @@
+# Gitleaks configuration: the default ruleset plus an allowlist for the
+# well-known, intentionally public demo tokens used by this test tool.
+title = "MockSCIMTarget gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documented demo/test tokens (not secrets)"
+regexes = [
+  '''mock-scim-token''',
+  '''target-token''',
+  '''ui-test-token''',
+  '''ci-token''',
+]

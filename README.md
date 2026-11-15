@@ -1,6 +1,9 @@
 # scim-target
 
 ![tests](https://github.com/dddaaammmooo/scim-target/actions/workflows/tests.yml/badge.svg)
+[![security](https://github.com/dddaaammmooo/scim-target/actions/workflows/security.yml/badge.svg)](https://github.com/dddaaammmooo/scim-target/actions/workflows/security.yml)
+[![secret scan](https://github.com/dddaaammmooo/scim-target/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/dddaaammmooo/scim-target/actions/workflows/secret-scan.yml)
+[![release](https://github.com/dddaaammmooo/scim-target/actions/workflows/release.yml/badge.svg)](https://github.com/dddaaammmooo/scim-target/releases)
 ![coverage](https://img.shields.io/badge/backend%20coverage-100%25%20(line%20%2B%20branch)-brightgreen)
 
 **MockSCIMTarget** is a standalone **SCIM 2.0 service provider** (server) you can point any SCIM
@@ -116,6 +119,7 @@ Regenerate them from a running instance with `python scripts/screenshots.py`.
 | [Fault injection](docs/fault-injection.md) | Testing retries, rate limiting and outages |
 | [End-to-end testing with scim-mock-hris](docs/end-to-end-with-mockhris.md) | Wiring the two apps together, then provision, verify, leaver and drift scenarios |
 | [Architecture & development](docs/architecture.md) | Code layout, storage, middleware, tests, running locally |
+| [Deploy to AWS](docs/deploy-aws.md) | Terraform module for ECS Fargate + ALB + EFS: architecture, steps, costs, security (unauthenticated admin API), teardown |
 
 ## Configuration
 
@@ -123,6 +127,42 @@ Regenerate them from a running instance with `python scripts/screenshots.py`.
 |---|---|---|
 | `SCIM_TOKEN` | `target-token` | Bearer token required on every SCIM request |
 | `DATA_DIR` | `./data` (`/data` in the container) | Where the SQLite database lives |
+
+## Releases and container images
+
+Releases are automated with [release-please](https://github.com/googleapis/release-please).
+Commits to `main` follow [Conventional Commits](https://www.conventionalcommits.org/):
+- `feat:` produces a minor release
+- `fix:` produces a patch release
+- `feat!:` or a `BREAKING CHANGE:` footer produces a major release
+
+release-please keeps a release pull request open with the next version and the
+`CHANGELOG.md` entry. Merging it tags the release, creates the GitHub release, and publishes
+a multi-architecture image (`linux/amd64`, `linux/arm64`) to GitHub Packages. Each image
+carries an SBOM and signed build provenance.
+
+```bash
+docker pull ghcr.io/dddaaammmooo/scim-target:latest      # or :1, :1.2, :1.2.3
+docker run --rm -p 8100:8100 -e SCIM_TOKEN=target-token -v scim-data:/data \
+  ghcr.io/dddaaammmooo/scim-target:latest
+```
+
+To check an image's provenance: `gh attestation verify oci://ghcr.io/dddaaammmooo/scim-target:latest --owner dddaaammmooo`
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for how to report a vulnerability. Every push and pull request
+runs these checks:
+- CodeQL for Python, JavaScript and GitHub Actions
+- Bandit
+- pip-audit
+- Trivy, covering the container image and the Dockerfile/Terraform configuration
+- Gitleaks secret scanning across the full history
+- dependency review on pull requests
+
+GitHub secret scanning with push protection, Dependabot alerts and security updates, and
+Dependabot version updates are enabled on the repository. Version updates cover pip,
+Actions, Docker and Terraform.
 
 ## Security note
 

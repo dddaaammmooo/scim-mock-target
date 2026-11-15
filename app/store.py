@@ -7,6 +7,16 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 LOG_CAP = 5000
+
+# Uniqueness lookups: (column, case-insensitive) -> statement. Column names never come from input.
+_CONFLICT_SQL = {
+    ("user_name", False): "SELECT id FROM resources WHERE tenant=? AND type=? AND user_name=? AND id IS NOT ?",
+    ("user_name", True): "SELECT id FROM resources WHERE tenant=? AND type=? AND lower(user_name)=? AND id IS NOT ?",
+    ("external_id", False): "SELECT id FROM resources WHERE tenant=? AND type=? AND external_id=? AND id IS NOT ?",
+    ("external_id", True): "SELECT id FROM resources WHERE tenant=? AND type=? AND lower(external_id)=? AND id IS NOT ?",
+    ("display_name", False): "SELECT id FROM resources WHERE tenant=? AND type=? AND display_name=? AND id IS NOT ?",
+    ("display_name", True): "SELECT id FROM resources WHERE tenant=? AND type=? AND lower(display_name)=? AND id IS NOT ?",
+}
 DEFAULT_FAULTS = {"latencyMs": 0, "errorRatePercent": 0, "rateLimitEvery": 0, "readOnly": False}
 
 SCHEMA = """
@@ -132,11 +142,9 @@ class Store:
 
     def find_conflict(self, tenant: str, rtype: str, column: str, value: str, exclude_id: str | None,
                       ci: bool) -> str | None:
-        assert column in ("user_name", "external_id", "display_name")
-        expr = f"lower({column})" if ci else column
+        sql = _CONFLICT_SQL[(column, ci)]          # fixed statements only: no dynamic SQL, KeyError if unknown
         val = value.lower() if ci else value
-        rows = self.q(f"SELECT id FROM resources WHERE tenant=? AND type=? AND {expr}=? AND id IS NOT ?",
-                      (tenant, rtype, val, exclude_id))
+        rows = self.q(sql, (tenant, rtype, val, exclude_id))
         return rows[0]["id"] if rows else None
 
     def insert_resource(self, tenant, rtype, rid, body, active=None):

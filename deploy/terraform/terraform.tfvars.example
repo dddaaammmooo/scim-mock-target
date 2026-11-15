@@ -1,0 +1,25 @@
+# Copy to terraform.tfvars (git-ignored) and edit.
+
+aws_region = "us-east-1"
+
+# REQUIRED: who may reach the load balancer. The admin API and UI of scim-target
+# are UNAUTHENTICATED by design - keep this as narrow as possible (your own IP,
+# plus the MockHRIS deployment's egress IP if you deploy both).
+allowed_cidrs = ["203.0.113.10/32"]
+
+# Optional: pin a published image tag.
+# image = "ghcr.io/dddaaammmooo/scim-target:v1.0.0"
+
+# Optional: HTTPS with your own ACM certificate and domain.
+# certificate_arn = "arn:aws:acm:us-east-1:111122223333:certificate/00000000-0000-0000-0000-000000000000"
+# domain_name     = "scim-target.example.com"
+
+# Optional: private subnets + one NAT gateway (about 32 USD/month more).
+# use_nat_gateway = true
+
+# Throwaway stack? Delete the secret immediately on destroy.
+# secret_recovery_window_days = 0
+
+tags = {
+  Owner = "your-name"
+}

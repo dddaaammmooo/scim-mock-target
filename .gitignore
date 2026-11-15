@@ -16,3 +16,10 @@ test-results/
 coverage.xml
 htmlcov/
 test-results/
+
+# Terraform
+deploy/terraform/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
