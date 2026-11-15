@@ -31,7 +31,7 @@ terraform apply
 |---|---|---|
 | `allowed_cidrs` | **yes** | No default. Keep it as narrow as possible. Include MockHRIS's egress IP if it must call this target. |
 | `aws_region` | no | Default `us-east-1`. |
-| `image` | no | Default `ghcr.io/dddaaammmooo/scim-target:latest`; pin a tag for repeatable deploys. |
+| `image` | no | Default `ghcr.io/dddaaammmooo/scim-mock-target:latest`; pin a tag for repeatable deploys. |
 | `certificate_arn`, `domain_name` | no | Enable HTTPS and a custom host name. |
 | `use_nat_gateway` | no | Default `false` (tasks in public subnets, reachable only from the ALB). |
 | `scim_token` | no | Generated if null. |

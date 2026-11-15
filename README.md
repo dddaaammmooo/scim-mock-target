@@ -1,9 +1,9 @@
 # scim-target
 
-![tests](https://github.com/dddaaammmooo/scim-target/actions/workflows/tests.yml/badge.svg)
-[![security](https://github.com/dddaaammmooo/scim-target/actions/workflows/security.yml/badge.svg)](https://github.com/dddaaammmooo/scim-target/actions/workflows/security.yml)
-[![secret scan](https://github.com/dddaaammmooo/scim-target/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/dddaaammmooo/scim-target/actions/workflows/secret-scan.yml)
-[![release](https://github.com/dddaaammmooo/scim-target/actions/workflows/release.yml/badge.svg)](https://github.com/dddaaammmooo/scim-target/releases)
+![tests](https://github.com/dddaaammmooo/scim-mock-target/actions/workflows/tests.yml/badge.svg)
+[![security](https://github.com/dddaaammmooo/scim-mock-target/actions/workflows/security.yml/badge.svg)](https://github.com/dddaaammmooo/scim-mock-target/actions/workflows/security.yml)
+[![secret scan](https://github.com/dddaaammmooo/scim-mock-target/actions/workflows/secret-scan.yml/badge.svg)](https://github.com/dddaaammmooo/scim-mock-target/actions/workflows/secret-scan.yml)
+[![release](https://github.com/dddaaammmooo/scim-mock-target/actions/workflows/release.yml/badge.svg)](https://github.com/dddaaammmooo/scim-mock-target/releases)
 ![coverage](https://img.shields.io/badge/backend%20coverage-100%25%20(line%20%2B%20branch)-brightgreen)
 
 **MockSCIMTarget** is a standalone **SCIM 2.0 service provider** (server) you can point any SCIM
@@ -57,8 +57,8 @@ automated tests, and troubleshooting.
 ## Quick start
 
 ```bash
-git clone https://github.com/dddaaammmooo/scim-target.git
-cd scim-target
+git clone https://github.com/dddaaammmooo/scim-mock-target.git
+cd scim-mock-target
 docker compose up -d --build
 ```
 
@@ -142,12 +142,12 @@ a multi-architecture image (`linux/amd64`, `linux/arm64`) to GitHub Packages. Ea
 carries an SBOM and signed build provenance.
 
 ```bash
-docker pull ghcr.io/dddaaammmooo/scim-target:latest      # or :1, :1.2, :1.2.3
+docker pull ghcr.io/dddaaammmooo/scim-mock-target:latest      # or :1, :1.2, :1.2.3
 docker run --rm -p 8100:8100 -e SCIM_TOKEN=target-token -v scim-data:/data \
-  ghcr.io/dddaaammmooo/scim-target:latest
+  ghcr.io/dddaaammmooo/scim-mock-target:latest
 ```
 
-To check an image's provenance: `gh attestation verify oci://ghcr.io/dddaaammmooo/scim-target:latest --owner dddaaammmooo`
+To check an image's provenance: `gh attestation verify oci://ghcr.io/dddaaammmooo/scim-mock-target:latest --owner dddaaammmooo`
 
 ## Security
 

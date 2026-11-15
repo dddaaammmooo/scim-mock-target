@@ -20,7 +20,7 @@ This guide deploys scim-target to AWS with the Terraform module in [`deploy/terr
         VPC (2 AZs)                   v
    +----------------------------------------------------------+
    |  ECS Fargate service "scim-target" (exactly 1 task)       |
-   |  image: ghcr.io/dddaaammmooo/scim-target                  |
+   |  image: ghcr.io/dddaaammmooo/scim-mock-target                  |
    |  env SCIM_TOKEN  <--- Secrets Manager                     |
    |  /data  <--- EFS access point (uid/gid 10001, TLS + IAM)  |
    +-----------------+---------------------------+------------+
@@ -47,7 +47,7 @@ Task placement is a cost choice (variable `use_nat_gateway`):
 - An AWS account and credentials in your shell (`aws sts get-caller-identity` works) with permission to create VPC, ECS, ELB, EFS, IAM, Secrets Manager and CloudWatch resources.
 - [Terraform](https://developer.hashicorp.com/terraform/install) 1.6 or newer.
 - AWS CLI v2 (to read the SCIM token).
-- The image must exist in GitHub Container Registry as a public package (`ghcr.io/dddaaammmooo/scim-target`).
+- The image must exist in GitHub Container Registry as a public package (`ghcr.io/dddaaammmooo/scim-mock-target`).
 - Optional: an ACM certificate (same region) and a DNS name you control for HTTPS.
 
 ## Deploy
@@ -85,7 +85,7 @@ terraform output efs_file_system_id
 | Goal | Variables |
 |---|---|
 | HTTPS | `certificate_arn` (HTTP then redirects to HTTPS). With a custom host name also set `domain_name` and create a CNAME or alias record to `terraform output alb_dns_name`. |
-| Pin the image | `image = "ghcr.io/dddaaammmooo/scim-target:<tag>"` |
+| Pin the image | `image = "ghcr.io/dddaaammmooo/scim-mock-target:<tag>"` |
 | Private tasks | `use_nat_gateway = true` |
 | Existing network | `create_vpc = false`, `vpc_id`, `alb_subnet_ids`, `task_subnet_ids`, `assign_public_ip` |
 | Supply your own token | `scim_token = "..."` (otherwise generated) |
@@ -156,7 +156,7 @@ Approximate us-east-1 on-demand prices; check the AWS pricing pages.
 
 ```bash
 aws logs tail "$(terraform output -raw log_group)" --follow
-terraform apply -var 'image=ghcr.io/dddaaammmooo/scim-target:<tag>'
+terraform apply -var 'image=ghcr.io/dddaaammmooo/scim-mock-target:<tag>'
 ```
 
 ## Teardown

@@ -50,7 +50,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
-          images: ghcr.io/${{ github.repository_owner }}/scim-target
+          images: ghcr.io/${{ github.repository_owner }}/scim-mock-target
           tags: |
             type=semver,pattern={{version}},value=${{ needs.release-please.outputs.tag_name }}
             type=semver,pattern={{major}}.{{minor}},value=${{ needs.release-please.outputs.tag_name }}
@@ -73,13 +73,13 @@ jobs:
           cache-to: type=gha,mode=max
       - uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
         with:
-          subject-name: ghcr.io/${{ github.repository_owner }}/scim-target
+          subject-name: ghcr.io/${{ github.repository_owner }}/scim-mock-target
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
       - name: Summary
         run: |
           {
-            echo "### Published ghcr.io/${{ github.repository_owner }}/scim-target"
+            echo "### Published ghcr.io/${{ github.repository_owner }}/scim-mock-target"
             echo
             echo '${{ steps.meta.outputs.tags }}' | sed 's/^/- `/; s/$/`/'
             echo

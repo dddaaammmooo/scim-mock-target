@@ -22,8 +22,8 @@ will be smaller until a client has sent something.
 ## 1. Getting started
 
 ```bash
-git clone https://github.com/dddaaammmooo/scim-target.git
-cd scim-target
+git clone https://github.com/dddaaammmooo/scim-mock-target.git
+cd scim-mock-target
 docker compose up -d --build
 ```
 

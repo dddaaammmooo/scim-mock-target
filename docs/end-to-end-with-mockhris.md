@@ -14,9 +14,9 @@ MockHRIS (:8000) ── SCIM 2.0 (Bearer target-token) ──▶ scim-target (:8
 ## 1. Run both apps
 
 ```bash
-git clone https://github.com/dddaaammmooo/scim-target.git
+git clone https://github.com/dddaaammmooo/scim-mock-target.git
 git clone https://github.com/dddaaammmooo/scim-mock-hris.git
-(cd scim-target && docker compose up -d --build)
+(cd scim-mock-target && docker compose up -d --build)
 (cd scim-mock-hris && docker compose up -d --build)
 ```
 

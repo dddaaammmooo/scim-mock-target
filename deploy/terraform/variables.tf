@@ -46,7 +46,7 @@ variable "tags" {
 variable "image" {
   description = "Container image to run. The default is the public image published by CI to GitHub Container Registry; override to pin a digest or use a private mirror."
   type        = string
-  default     = "ghcr.io/dddaaammmooo/scim-target:latest"
+  default     = "ghcr.io/dddaaammmooo/scim-mock-target:latest"
 }
 
 variable "cpu" {

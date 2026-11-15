@@ -12,7 +12,7 @@ Only the latest release receives fixes.
 ## Reporting a vulnerability
 
 Please report vulnerabilities **privately** using GitHub's
-[private vulnerability reporting](https://github.com/dddaaammmooo/scim-target/security/advisories/new)
+[private vulnerability reporting](https://github.com/dddaaammmooo/scim-mock-target/security/advisories/new)
 rather than opening a public issue. Include steps to reproduce and the affected version
 (image tag or commit). You can expect an acknowledgement within a few days.
 
